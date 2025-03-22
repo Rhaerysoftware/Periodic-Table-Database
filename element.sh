@@ -1,23 +1,20 @@
 #!/bin/bash
 
-
 PSQL="psql --username=freecodecamp --dbname=periodic_table -t --no-align -c"
 
-
-if [[ -z $1 ]]
-then
+if [[ -z $1 ]]; then
   echo "Please provide an element as an argument."
   exit 0
 fi
 
+ELEMENT=$($PSQL "SELECT elements.atomic_number, elements.name, elements.symbol, types.type, properties.atomic_mass, properties.melting_point_celsius, properties.boiling_point_celsius FROM elements JOIN properties ON elements.atomic_number = properties.atomic_number JOIN types ON properties.type_id = types.type_id WHERE elements.atomic_number::TEXT = '$1' OR elements.symbol = '$1' OR elements.name = '$1'")
 
-ELEMENT_QUERY=$($PSQL "SELECT atomic_number, name, symbol, type, atomic_mass, melting_point_celsius, boiling_point_celsius FROM elements JOIN properties USING(atomic_number) JOIN types USING(type_id) WHERE atomic_number='$1' OR symbol='$1' OR name='$1'")
-
-
-if [[ -z $ELEMENT_QUERY ]]
-then
+if [[ -z $ELEMENT ]]; then
   echo "I could not find that element in the database."
-else
-  IFS="|" read -r ATOMIC_NUMBER NAME SYMBOL TYPE ATOMIC_MASS MELTING_POINT BOILING_POINT <<< "$ELEMENT_QUERY"
-  echo "The element with atomic number $ATOMIC_NUMBER is $NAME ($SYMBOL). It's a $TYPE, with a mass of $ATOMIC_MASS amu. $NAME has a melting point of $MELTING_POINT celsius and a boiling point of $BOILING_POINT celsius."
+  exit 0
 fi
+
+echo "$ELEMENT" | while IFS="|" read ATOMIC_NUM NAME SYMBOL TYPE MASS MELT BOIL
+do
+  echo "The element with atomic number $ATOMIC_NUM is $NAME ($SYMBOL). It's a $TYPE, with a mass of $MASS amu. $NAME has a melting point of $MELT celsius and a boiling point of $BOIL celsius."
+done

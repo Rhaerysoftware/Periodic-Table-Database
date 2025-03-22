@@ -3,12 +3,15 @@ DROP DATABASE IF EXISTS periodic_table;
 CREATE DATABASE periodic_table;
 \c periodic_table;
 
--- Create elements table
+
+
 CREATE TABLE elements (
   atomic_number SERIAL PRIMARY KEY,
   name VARCHAR(50) NOT NULL UNIQUE,
-  symbol VARCHAR(5) NOT NULL UNIQUE
+  symbol VARCHAR(5) NOT NULL UNIQUE,
+  atomic_mass DECIMAL(6,3) NOT NULL
 );
+
 
 -- Create types table
 CREATE TABLE types (
@@ -30,17 +33,17 @@ CREATE TABLE properties (
 );
 
 -- Insert elements
-INSERT INTO elements (atomic_number, name, symbol) VALUES
-(1, 'Hydrogen', 'H'),
-(2, 'Helium', 'He'),
-(3, 'Lithium', 'Li'),
-(4, 'Beryllium', 'Be'),
-(5, 'Boron', 'B'),
-(6, 'Carbon', 'C'),
-(7, 'Nitrogen', 'N'),
-(8, 'Oxygen', 'O'),
-(9, 'Fluorine', 'F'),
-(10, 'Neon', 'Ne');
+INSERT INTO elements (atomic_number, name, symbol, atomic_mass) VALUES
+(1, 'Hydrogen', 'H', 1.008),
+(2, 'Helium', 'He', 4.002),
+(3, 'Lithium', 'Li', 6.94),
+(4, 'Beryllium', 'Be', 9.012),
+(5, 'Boron', 'B', 10.81),
+(6, 'Carbon', 'C', 12.011),
+(7, 'Nitrogen', 'N', 14.007),
+(8, 'Oxygen', 'O', 15.999),
+(9, 'Fluorine', 'F', 18.998),
+(10, 'Neon', 'Ne', 20.18);
 
 -- Insert properties
 INSERT INTO properties (atomic_number, atomic_mass, melting_point_celsius, boiling_point_celsius, type_id) VALUES
